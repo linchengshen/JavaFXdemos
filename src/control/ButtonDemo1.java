@@ -49,7 +49,10 @@ public class ButtonDemo1 extends Application {
 		// getResource()是相对于当前这份字节码所在的目录
 		// getResourceAsStream()和getResource(),都是获取资源文件
 		// getResourceAsStream()在javaSE中是一致的，在javaweb中不一致
-		String ret = this.getClass().getResource("btnStyle.css").toExternalForm();
+		// 相对于当前字节码所在路径加载文件
+		// String ret = this.getClass().getResource("btnStyle.css").toExternalForm();
+		// 相对于跟路径 bin目录加载文件
+		String ret = Thread.currentThread().getContextClassLoader().getResource("btnStyle.css").toExternalForm();
 		btn.getStylesheets().add(ret);
 
 		// 监听事件,鼠标移入，添加效果
