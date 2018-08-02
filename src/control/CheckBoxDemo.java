@@ -103,7 +103,7 @@ public class CheckBoxDemo extends Application {
 			public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
 				// TODO Auto-generated method stub
 				if (newValue.booleanValue() == true) {
-					System.out.println("you hava chose:" + banana.getUserData());
+					System.out.println("you hava chose:" + orange.getUserData());
 				}
 			}
 		});
