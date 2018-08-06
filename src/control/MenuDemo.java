@@ -3,14 +3,18 @@ package control;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
+import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
@@ -73,6 +77,14 @@ import javafx.stage.Stage;
  *         SHORTCUT_DOWN值将使应用程序能够跨平台使用。
  * 
  *         CONTROL_DOWN和META_DOWN值分别依赖于Windows和MacOS平台，但是SHORTCUT_DOWN在所有平台上都有效。
+ * 
+ * 
+ *         键组合设置事件相应setOnMenuValidation(EventHandler<Event> value) 或者
+ *         setOnAction(EventHandler<ActionEvent> value)
+ * 
+ *         KeyCombination 是抽象类 KeyCodeCombination extends KeyCombination
+ *         KeyCode是一个枚举类
+ * 
  *
  */
 public class MenuDemo extends Application {
@@ -96,13 +108,45 @@ public class MenuDemo extends Application {
 		// fileMenu new,save,exit
 		Menu fileMenu = new Menu("_file");
 		fileMenu.setMnemonicParsing(true);
-		MenuItem newMenuItem = new MenuItem("new");
-		
+		MenuItem newMenuItem = new MenuItem("_new file");
+		newMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.N, KeyCombination.SHORTCUT_DOWN));
+		newMenuItem.setOnMenuValidation(new EventHandler<Event>() {
+
+			@Override
+			public void handle(Event event) {
+				// TODO Auto-generated method stub
+				System.out.println("Ctrl + N 创建新文件");
+			}
+
+		});
+
 		MenuItem saveMenuItem = new MenuItem("_save");
 		saveMenuItem.setMnemonicParsing(true);
 		saveMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.S, KeyCombination.SHORTCUT_DOWN));
-		
+		// 方式1：对按下快捷键ctrl + s的事件响应
+		saveMenuItem.setOnAction(new EventHandler<ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent event) {
+				// TODO Auto-generated method stub
+				System.out.println("ctrl + s" + ":" + event.getClass());
+
+			}
+		});
+
+		// 方式二：对按下快捷键ctrl + s的事件响应
+		saveMenuItem.setOnMenuValidation(new EventHandler<Event>() {
+
+			@Override
+			public void handle(Event event) {
+				// TODO Auto-generated method stub
+				System.out.println("ctrl + S" + event.getClass());
+			}
+
+		});
+
 		MenuItem exitMenuItem = new MenuItem("exit");
+		exitMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.E, KeyCombination.SHORTCUT_DOWN));
 		exitMenuItem.setOnAction(new EventHandler<ActionEvent>() {
 
 			@Override
@@ -122,6 +166,25 @@ public class MenuDemo extends Application {
 		MenuItem cssMenuItem = new MenuItem("css");
 		MenuItem javascriptMenuItem = new MenuItem("javascript");
 		web.getItems().addAll(htmlMenuItem, cssMenuItem, javascriptMenuItem);
+
+		// 上下文菜单
+		// 但是没有弹出菜单
+		ContextMenu contextMenu = new ContextMenu(exitMenuItem);
+		primaryStage.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
+
+			@Override
+			public void handle(MouseEvent event) {
+				// TODO Auto-generated method stub
+				if (event.getButton() == MouseButton.SECONDARY || event.isControlDown()) {
+					contextMenu.show(root,event.getX(),event.getY());
+					System.out.println("右键");
+				} else {
+					contextMenu.hide();
+					System.out.println("左键");
+				}
+			}
+
+		});
 
 		menuBar.getMenus().addAll(fileMenu, web);
 		Scene scene = new Scene(root, 600, 450);

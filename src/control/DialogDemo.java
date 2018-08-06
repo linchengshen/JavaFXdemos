@@ -9,6 +9,8 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.DialogEvent;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 
 public class DialogDemo extends Application {
@@ -18,12 +20,11 @@ public class DialogDemo extends Application {
 		// TODO Auto-generated method stub
 
 		Group root = new Group();
-
 		Button button = new Button("alert");
 		root.getChildren().add(button);
 		button.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
-			public void handle(ActionEvent event){
+			public void handle(ActionEvent event) {
 				Dialog<Alert> dialog = new Dialog<>();
 				dialog.setTitle("¾¯¸æ");
 				dialog.setContentText("You have been baned by Steam!");
@@ -39,9 +40,20 @@ public class DialogDemo extends Application {
 				});
 				dialog.show();
 
+
 			}
 		});
 
+		primaryStage.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
+
+			@Override
+			public void handle(MouseEvent event) {
+				// TODO Auto-generated method stub
+				if (event.getButton() == MouseButton.PRIMARY) {
+					
+				}
+			}
+		});
 		Scene scene = new Scene(root, 600, 450);
 		primaryStage.setScene(scene);
 		primaryStage.show();
