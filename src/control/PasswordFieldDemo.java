@@ -61,7 +61,7 @@ public class PasswordFieldDemo extends Application {
 		
 		hbox.getChildren().addAll(passworldLabel, password);
 		root.getChildren().addAll(hbox,msg);
-
+		
 		Scene scene = new Scene(root, 300, 200);
 		primaryStage.setScene(scene);
 		primaryStage.show();

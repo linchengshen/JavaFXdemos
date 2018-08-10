@@ -1,5 +1,7 @@
 package control;
 
+import java.io.FileNotFoundException;
+
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -10,13 +12,13 @@ import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
-import javafx.scene.input.MouseButton;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 /**
  * 
@@ -95,7 +97,7 @@ public class MenuDemo extends Application {
 	}
 
 	@Override
-	public void start(Stage primaryStage) {
+	public void start(Stage primaryStage) throws FileNotFoundException, Exception {
 		primaryStage.setTitle("Menu demo");
 
 		BorderPane root = new BorderPane();
@@ -168,23 +170,42 @@ public class MenuDemo extends Application {
 		web.getItems().addAll(htmlMenuItem, cssMenuItem, javascriptMenuItem);
 
 		// 上下文菜单
-		// 但是没有弹出菜单
 		ContextMenu contextMenu = new ContextMenu(exitMenuItem);
-		primaryStage.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
+		MenuItem about = new MenuItem("about");
+		about.setOnAction(new EventHandler<ActionEvent>() {
 
 			@Override
-			public void handle(MouseEvent event) {
+			public void handle(ActionEvent event) {
 				// TODO Auto-generated method stub
-				if (event.getButton() == MouseButton.SECONDARY || event.isControlDown()) {
-					contextMenu.show(root,event.getX(),event.getY());
-					System.out.println("右键");
-				} else {
-					contextMenu.hide();
-					System.out.println("左键");
-				}
+
+				System.out.println("about");
+			}
+		});
+		about.setAccelerator(new KeyCodeCombination(KeyCode.A, KeyCombination.SHORTCUT_DOWN));
+
+		about.setGraphic(new ImageView("http://www.icosky.com/icon/16/Application/Toolbar%20Icons/About.png"));
+
+		MenuItem preference = new MenuItem("preference");
+		preference.setGraphic(new ImageView(
+				"http://www.icosky.com/icon/16/System/Serenity%202%20%20Icon%20Pack%20set1/Settings.png"));
+		preference.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				System.out.println("preference");
+			}
+		});
+
+		contextMenu.getItems().addAll(about, preference);
+		contextMenu.setOnShown(new EventHandler<WindowEvent>() {
+
+			@Override
+			public void handle(WindowEvent event) {
+				// TODO Auto-generated method stub
+				System.out.println("shown");
 			}
 
 		});
+		menuBar.setContextMenu(contextMenu);
 
 		menuBar.getMenus().addAll(fileMenu, web);
 		Scene scene = new Scene(root, 600, 450);
